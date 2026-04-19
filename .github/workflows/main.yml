@@ -1,0 +1,21 @@
+name: Daily Stock Update
+on:
+  schedule:
+    - cron: '0 7 * * *' # 한국 시간 오후 4시
+  workflow_dispatch: # 직접 테스트해볼 수 있는 버튼 생성
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install gspread oauth2client requests beautifulsoup4
+      - name: Run script
+        env:
+          GOOGLE_AUTH: ${{ secrets.GOOGLE_AUTH }}
+        run: python stock_auto_update.py
